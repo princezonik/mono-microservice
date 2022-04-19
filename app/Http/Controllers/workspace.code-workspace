@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"name": "my-erm",
+			"path": "../../../../my-erm"
+		},
+		{
+			"name": "react-admin",
+			"path": "../../../../react-admin"
+		},
+		{
+			"name": "Dock",
+			"path": "../../../../Dock"
+		},
+		{
+			"name": "microservice",
+			"path": "../../.."
+		}
+	],
+	"settings": {}
+}
