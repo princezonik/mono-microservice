@@ -1,0 +1,44 @@
+version: '3.7'
+services:
+
+  backend:
+    container_name: micro_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: db
+      
+      DB_DATABASE: admin
+      DB_USERNAME: root
+      DB_PASSWORD: root
+    ports:
+    -  8000:8000
+    volumes:
+    - .:/app
+    depends_on:
+      - db
+    networks:
+    - app
+
+
+  db:
+    container_name: micro_db
+    image: mysql:8
+
+    cap_add:
+    - SYS_NICE  # CAP_SYS_NICE
+    environment: 
+      MYSQL_DATABASE: admin
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+    - .dbdata:/var/lib/mysql
+    ports:
+    - 3306:3306
+    
+    networks:
+    - app
+networks:
+  app:
+   
