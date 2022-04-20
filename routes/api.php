@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ImageController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,7 +23,12 @@ Route::post('register', [AuthController::class, 'register'])->name('register');
 
 
 Route::group(['middleware' => 'auth:api'], function(){
-    
+    Route::get('user', [UserController::class, 'user']);
+    Route::get('users/updateinfo', [UserController::class, 'updateInfo']);
+    Route::get('users/updatepassword', [UserController::class, 'updatePassword']);
+    Route::post('upload', [ImageController::class, 'upload']);
+
     Route::apiResource('users', UserController::class);
+    Route::apiResource('roles', RoleController::class);
 
 });

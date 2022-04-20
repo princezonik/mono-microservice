@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUserInfoRequest;
+use App\Http\Requests\UpdateUserPasswordRequest;
 use App\Http\Requests\UserUpdateRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Auth;
 use Hash;
@@ -18,7 +21,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::all();
+       $user = User::paginate();
+
+       return response(UserResource::collection($user), Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -29,12 +34,12 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-       $user = User::create( $request->only('first_name', 'last_name', 'email') +
+       $user = User::create( $request->only('first_name', 'last_name', 'email', 'role_id') +
           [
             'password' => Hash::make(1234)
         ]);
 
-        return response($user, Response::HTTP_CREATED);
+        return response(new UserResource($user), Response::HTTP_CREATED);
     }
 
     /**
@@ -47,7 +52,7 @@ class UserController extends Controller
     {
        $user = User::find($id);
 
-        return response($user, Response::HTTP_ACCEPTED);
+        return response(new UserResource($user), Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -61,10 +66,10 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        $user->update($request->only('first_name', 'last_name', 'email')
+        $user->update($request->only('first_name', 'last_name', 'email', 'role_id')
         + [ Hash::make('password')]);
 
-        return response($user, Response::HTTP_ACCEPTED);
+        return response(new UserResource($user), Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -78,6 +83,30 @@ class UserController extends Controller
         $user = User::destroy($id);
 
         return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function user(){
+       
+        $user = Auth::user();
+
+        return response(new UserResource($user), Response::HTTP_ACCEPTED);
+    }
+
+    public function updateInfo(UpdateUserInfoRequest $request){
+
+        $user = Auth::user();
+
+        $user->update($request->only('first_name', 'last_name', 'email'));
+
+        return response(new UserResource($user), Response::HTTP_ACCEPTED);
+    }
+
+    public function updatePassword(UpdateUserPasswordRequest $request){
+        $user = Auth::user();
+
+        $user->update(['password' => Hash::make($request->input('password'))]);
+
+        return response(new UserResource($user), Response::HTTP_ACCEPTED);
     }
 
 }
