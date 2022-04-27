@@ -19,7 +19,9 @@ class DatabaseSeeder extends Seeder
             RoleTableSeeder::class,
             UserTableSeeder::class,
             ProductTableSeeder::class,
-            OrderTableSeeder::class
+            OrderTableSeeder::class,
+            PermissionTableSeeder::class,
+            RolePermissionSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
     }
