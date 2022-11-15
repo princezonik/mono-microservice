@@ -1,10 +1,14 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\VerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,7 +34,18 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('upload', [ImageController::class, 'upload']);
 
     Route::apiResource('users', UserController::class);
+    Route::apiResource('permissions', PermissionController::class);
     Route::apiResource('roles', RoleController::class);
     Route::apiResource('orders', OrderController::class)->only('index', 'show');
 
+    Route::post('forgot-password', [PasswordResetController::class, 'forgotPassword']);
+    Route::post('reset-password', [PasswordResetController::class, 'resetPassword']);
+
+    
+    Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
+
+    Route::get('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail']);
+
+
+    Route::post('logout', [AuthController::class, 'logout']);
 });

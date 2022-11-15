@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
-
+use Illuminate\Contracts\Auth\CanResetPassword;
+use Notification;
 /**
  * App\Models\User
  *
@@ -40,7 +42,7 @@ use Laravel\Passport\HasApiTokens;
  * @property-read \App\Models\Role $role
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRoleId($value)
  */
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -64,5 +66,12 @@ class User extends Authenticatable
 
     public function hasAccess($access){
         return $this->permissions()->contains($access);
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $url = "https://dexterprolimited.com/reset-password?token=" . $token;
+
+        $this->notify(new ResetPasswordNotification($url));
     }
 }

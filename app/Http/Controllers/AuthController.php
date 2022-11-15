@@ -32,11 +32,19 @@ class AuthController extends Controller
         ], Response::HTTP_UNAUTHORIZED);
     }
 
-   public function register(Request $request){
+    public function register(Request $request){
 
         $user = User::create($request->only('first_name', 'last_name', 'email') 
         + ['password' => Hash::make($request->input('password'))]);
 
         return response($user, Response::HTTP_CREATED);
+   }
+
+   public function logout(Request $request) {
+       $request->user()->tokens()->delete();
+       
+       return response()->json([
+           'message' => 'Logged Out'
+       ]);
    }
 }
