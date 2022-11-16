@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             ProductTableSeeder::class,
             OrderTableSeeder::class,
             PermissionTableSeeder::class,
-            RolePermissionSeeder::class
+            RolePermissionSeeder::class,
+            RestaurantSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
     }

@@ -17,6 +17,7 @@ class EmailVerificationController extends Controller
                 'message' => 'Already verified!'
             ];
         }
+        
         $request->user()->sendEmailVerificationNotification();
         return ['status' => 'verification-link-sent'];
 
